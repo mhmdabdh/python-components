@@ -1,18 +1,83 @@
 from Tkinter import *
 from Tkinter import Frame, Entry, Tk
+import time
+import datetime as dt
 import sqlite3
 from sqlite3 import Error
 
-root = Tk()
-root.title("Three Frames")
 
-#Creating 3 frames
-frame1 = Frame(root, highlightbackground="blue", highlightcolor="blue", highlightthickness=1 , width=1000, height =100, bd =0)
-frame1.pack()
-frame2 = Frame(root, highlightbackground="blue", highlightcolor="blue", highlightthickness=1 ,width=1000, height =500)
-frame2.pack()
-frame3 = Frame(root, highlightbackground="blue", highlightcolor="blue",highlightthickness=1, width=1000, height =100)
-frame3.pack()
-frame4 = Frame(root, highlightbackground="blue", highlightcolor="blue",highlightthickness=1, width=1000, height =100)
-frame4.pack()
+
+
+
+
+
+# The main starts here
+
+root = Tk()
+root.title ( "SICO Trichy")
+
+#CREATING THE WIDGETS
+#Throw in two labels
+lblDate_1 = Label(root, text="Date:")
+#lblDate_2 = Label(root,text="Pending")
+lblShopName = Label(root, text="S. Ibrahim & Co., Trichy")
+time1 = ''
+lblClock = Label(root)
+
+#throw in textboxes
+
+#Throw in buttons
+btnNewBill = Button(root, text="Create New Bill", border=1)
+btnExistBill = Button(root, text = "View Existing Bill", border=1)
+btnCreateItem = Button(root, text = "Create New Item",border=1)
+btnEditItem = Button(root,text="Edit Existing Item",border=1)
+#END OF WIDGETS
+
+
+#LAYOUT OF WIDGETS ON THE GRID
+
+# In Row 0
+lblDate_1.grid(row=0, column=6)
+#lblDate_2.grid(row=0, column=7)
+lblClock.grid(row=2,column=7)
+lblShopName.grid(row=0, column=4, sticky =W)
+# In Row 1 we have only blank space
+# In row 2 we have only blank space
+
+# In row 3 we have some stuff
+btnNewBill.grid(row=3 , column =2)
+btnExistBill.grid(row=3, column=4)
+btnCreateItem.grid(row=3, column =6)
+btnEditItem.grid(row=3, column=8)
+#END OF LAYOUT
+
+# To fix the column and row sizes to default
+col_count, row_count = root.grid_size()
+
+for col in xrange(col_count):
+    root.grid_columnconfigure(col, minsize=20)
+
+for row in xrange(row_count):
+    root.grid_rowconfigure(row, minsize=20)
+# END of fixing the column and row sizez
+
+#Setup the clock timer to display
+def fn_tick():
+    global time1
+    # get the current local time from the PC
+    time2 = time.strftime('%H:%M:%S')
+    # if time string has changed, update it
+    if time2 != time1:
+        time1 = time2
+        lblClock.config(text=time2)
+    # calls itself every 200 milliseconds
+    # to update the time display as needed
+    # could use >200 ms, but display gets jerky
+    lblClock.after(200, fn_tick)
+
+#Call the clock ticker on initialization
+fn_tick()
+
+
+
 root.mainloop()
