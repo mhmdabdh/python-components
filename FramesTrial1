@@ -2,6 +2,7 @@ from Tkinter import *
 from Tkinter import Frame, Entry, Tk
 import time
 import datetime as dt
+import unicodedata as u
 import sqlite3
 from sqlite3 import Error
 
@@ -16,13 +17,30 @@ from sqlite3 import Error
 root = Tk()
 root.title ( "SICO Trichy")
 
-#CREATING THE WIDGETS
-#Throw in two labels
+
+#Variables Declaration
+#vTime1 is used in the function to compute dynamic time
+vTime1 = ''
+#vDate is used to display todays date
+vDate=dt.datetime.today().strftime("%d-%b-%Y")
+# The company logo image #The company logo image
+vCompanyLogo=PhotoImage(file="G:\Programming\AbiePyCharmWork\SICO_Logo.gif")
+#The company alphabets in Tamil
+vaCompanyLetters = [ u'\u0b87' , u'\u0baa' ,u'\u0bcd'  ,u'\u0bb0' ,u'\u0bbe', u'\u0bb9' ,u'\u0bbf', u'\u0bae' ,u'\u0bcd' ]
+#Concatenate the tamil letters into one word
+vtCompanyName= u''.join(vaCompanyLetters)
+
+#CREATING/CONFIGURING THE WIDGETS
+#Throw in  labels
 lblDate_1 = Label(root, text="Date:")
-#lblDate_2 = Label(root,text="Pending")
-lblShopName = Label(root, text="S. Ibrahim & Co., Trichy")
-time1 = ''
+lblDate_2 = Label(root,text=vDate)
+#lblShopName = Label(root, text="S. Ibrahim & Co., \n Trichy" + alist)
+lblShopName = Label(root, font=(None, 25), text="S. " + vtCompanyName + " & Co\n S. Ibrahim & Co., \n  23, Palakarai Maizham \n Trichy - 620008")
 lblClock = Label(root)
+lblCompanyLogo = Label(root, image=vCompanyLogo)
+lblThankyou = Label(root,text="Thank you come again!")
+lblShoestring1 = Label(root , text="shoestringapp@gmail.com")
+lblShoestring1.config(fg="blue")
 
 #throw in textboxes
 
@@ -37,11 +55,12 @@ btnEditItem = Button(root,text="Edit Existing Item",border=1)
 #LAYOUT OF WIDGETS ON THE GRID
 
 # In Row 0
-lblDate_1.grid(row=0, column=6)
-#lblDate_2.grid(row=0, column=7)
-lblClock.grid(row=2,column=7)
-lblShopName.grid(row=0, column=4, sticky =W)
-# In Row 1 we have only blank space
+lblDate_1.grid(row=0, column=7)
+lblDate_2.grid(row=0, column=8)
+lblShopName.grid(row=0, column=4, sticky =W, columnspan=3)
+lblCompanyLogo.grid(row=0, column=2, sticky =N)
+# In Row 1
+lblClock.grid(row=1,column=8, sticky=N)
 # In row 2 we have only blank space
 
 # In row 3 we have some stuff
@@ -49,6 +68,10 @@ btnNewBill.grid(row=3 , column =2)
 btnExistBill.grid(row=3, column=4)
 btnCreateItem.grid(row=3, column =6)
 btnEditItem.grid(row=3, column=8)
+
+#In the last row
+lblThankyou.grid(row=15, column= 4, columnspan = 3, sticky=S)
+lblShoestring1.grid(row=16, column= 4, columnspan = 3, rowspan=5, sticky=N)
 #END OF LAYOUT
 
 # To fix the column and row sizes to default
@@ -63,17 +86,24 @@ for row in xrange(row_count):
 
 #Setup the clock timer to display
 def fn_tick():
-    global time1
+    global vTime1
     # get the current local time from the PC
-    time2 = time.strftime('%H:%M:%S')
+    vTime2 = time.strftime('%H:%M:%S')
     # if time string has changed, update it
-    if time2 != time1:
-        time1 = time2
-        lblClock.config(text=time2)
+    if vTime2 != vTime1:
+        vTime1 = vTime2
+        lblClock.config(text=vTime2)
     # calls itself every 200 milliseconds
     # to update the time display as needed
     # could use >200 ms, but display gets jerky
     lblClock.after(200, fn_tick)
+    #END OF CLOCK TICKER
+
+#Function to create new item
+def fn_CreateNewItem(self):
+     self.top = tkinter.Toplevel()
+     self.top.title("Create New Stock Item")
+
 
 #Call the clock ticker on initialization
 fn_tick()
